@@ -28,7 +28,9 @@ namespace CommCheck
                 var result = examin.ExaminResultTimes;
                 outputFile.WriteLine(
                     $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
-                    $"{result.Average():n2},{result.Max():n2},{Mean(result):n2},{CalcStd(result):n2},{(result.Average() + CalcStd(result) * 3):n2}"
+                    $"{Math.Round(result.Average(), 2)},{Math.Round(result.Max(),2)}," +
+                    $"{Mean(result):n2},{CalcStd(result):n2}," +
+                    $"{Math.Round((result.Average() + CalcStd(result) * 3), 2)}"
                 );
             }
         }
@@ -36,7 +38,7 @@ namespace CommCheck
         private static double Mean(ConcurrentBag<double> xs)
         {
             var ys = xs.OrderBy(x => x).ToList();
-            return (xs.ElementAt(ys.Count/2) + ys.ElementAt((ys.Count-1)/2)) / 2;
+            return Math.Round((xs.ElementAt(ys.Count/2) + ys.ElementAt((ys.Count-1)/2)) / 2, 2);
         }
 
         private static double CalcStd(IReadOnlyCollection<double> pValues)
@@ -48,7 +50,7 @@ namespace CommCheck
             var lStandardDeviation = pValues.Sum(fValue => (fValue - lAverage) * (fValue - lAverage));
 
             //σを算出して返却
-            return Math.Sqrt(lStandardDeviation / pValues.Count);
+            return Math.Round(Math.Sqrt(lStandardDeviation / pValues.Count), 2);
         }
     }
 }
