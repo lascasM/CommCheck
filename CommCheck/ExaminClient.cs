@@ -9,11 +9,11 @@ namespace CommCheck
     {
         public ConcurrentBag<double> ExaminResultTimes { get; }
 
-        private readonly int _dataSize;
-        protected readonly int ThreadNum;
-        protected readonly int CommInterval;
+        public int DataSize { get; }
+        public int ThreadNum { get; }
+        public int CommInterval { get; }
         protected readonly int ExaminNum;
-        public Stopwatch TotalTimer { get; private set; } 
+        public Stopwatch TotalTimer { get; } 
         
         // propertyは、直接スレッドセーフインクリメントが使えないので、トリッキーなことをしている
         private int _errorCouter;
@@ -24,7 +24,7 @@ namespace CommCheck
 
         protected ExaminClient(int dataSize, int commInterval, int examinNum, int threadNum)
         {
-            _dataSize = dataSize;
+            DataSize = dataSize;
             CommInterval = commInterval;
             ExaminNum = examinNum;
             ThreadNum = threadNum;
@@ -37,7 +37,7 @@ namespace CommCheck
         protected byte[] MakeRandomBinary()
         {
             var rnd = new Random();
-            var byteLength = rnd.Next((int) (_dataSize * 0.95), (int) (_dataSize * 1.05));
+            var byteLength = rnd.Next((int) (DataSize * 0.95), (int) (DataSize * 1.05));
             
             var ret = new byte[byteLength];
             rnd.NextBytes(ret);

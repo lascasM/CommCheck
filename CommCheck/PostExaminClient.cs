@@ -10,8 +10,7 @@ namespace CommCheck
     {
         public PostExaminClient(int dataSize, int commInterval, int examinNum, int threadNum) :
             base(dataSize, commInterval, examinNum, threadNum)
-        {
-        }
+        {}
 
         public override void Execute()
         {
@@ -21,7 +20,11 @@ namespace CommCheck
 
             for (var i = 0; i < ThreadNum; i++)
             {
-                var t = new Task(ExecuteExmain);
+                var displayed = i == 0;
+                var t = new Task(()=>
+                {
+                    ExecuteExmain(displayed);
+                });
                 t.Start();
                 tasks.Add(t);
             }
@@ -31,7 +34,7 @@ namespace CommCheck
             TotalTimer.Stop();
         }
 
-        private void ExecuteExmain()
+        private void ExecuteExmain(bool displayed)
         {
             for (var i = 1; i <= ExaminNum; i++) // 表示のために、1からスタート
             {
@@ -49,7 +52,7 @@ namespace CommCheck
                         bson
                     );
 
-                    if (i % 500 == 0)
+                    if (i % 500 == 0 && displayed)
                         Console.Write($"{i}, ");
                 }
                 catch

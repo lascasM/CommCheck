@@ -25,33 +25,23 @@ namespace CommCheck
             {
                 _examinServer.StartListen(ct);
             }, ct);
-                
-            foreach (var examin in _examinList)
+
+            var resultFile = new ResultFile();
+            for (var i = 0; i < _examinList.Count; i++)
             {
+                Console.Write($"測定中{i} >>>");
+
+                var examin = _examinList[i];
                 examin.Execute();
+
+                resultFile.Write(examin);
                 
-                // サンプルとして、取得したHTMLデータの<h1>タグ以降を一定長だけ表示
-                Console.WriteLine("====  測定結果(測定時間:{0:n1}[sec])  ====", examin.TotalTimer.Elapsed.TotalSeconds);
-                Console.WriteLine("平均[ms]　　　    ：{0:n2}", examin.ExaminResultTimes.Average());
-                Console.WriteLine("最大値[ms]　　    ：{0:n2}", examin.ExaminResultTimes.Max());
-                Console.WriteLine("標準偏差[ms]　    ：{0:n2}", PopulationStandardDeviation(examin.ExaminResultTimes));
-                Console.WriteLine("平均 + 3シグマ[ms]：{0:n2}", examin.ExaminResultTimes.Average() + PopulationStandardDeviation(examin.ExaminResultTimes) * 3);
-                Console.WriteLine("====  通信失敗回数 : {0}  ====", examin.ErrorCountor);
+                Console.WriteLine($"<<<  測定完了{i}(測定時間:{examin.TotalTimer.Elapsed.TotalSeconds:n1}[sec])  ====");
             }
 
             tokenSource2.Cancel();
         }
 
-        private double PopulationStandardDeviation(IReadOnlyCollection<double> pValues)
-        {
-            //平均を取得
-            var lAverage = pValues.Average();
- 
-            //「σの二乗×データ数」まで計算
-            var lStandardDeviation = pValues.Sum(fValue => (fValue - lAverage) * (fValue - lAverage));
 
-            //σを算出して返却
-            return Math.Sqrt(lStandardDeviation / pValues.Count);
-        }
     }
 }
