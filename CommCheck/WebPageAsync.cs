@@ -32,8 +32,8 @@ namespace CommCheck
                 catch (TaskCanceledException e)
                 {
                     // タスクがキャンセルされたとき（一般的にタイムアウト）
-                    Console.WriteLine("\nタイムアウト!");
-                    Console.WriteLine("例外メッセージ: {0} ", e.Message);
+                    //Console.WriteLine("\nタイムアウト!");
+                    //Console.WriteLine("例外メッセージ: {0} ", e.Message);
                 }
                 return null;
             }

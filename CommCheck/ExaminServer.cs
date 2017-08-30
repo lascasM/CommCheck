@@ -23,7 +23,7 @@ namespace CommCheck
                 _listener.Start();
                 
                 var testNumber = 1;
-                while (ct.IsCancellationRequested)
+                while (ct.IsCancellationRequested == false)
                 {
                     var context = _listener.GetContext();
 

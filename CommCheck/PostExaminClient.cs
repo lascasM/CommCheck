@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,7 +72,7 @@ namespace CommCheck
             var result = webTask.Result; // 結果を取得
 
             // 取得結果を使った処理
-            if (result == null || result.StatusCode.ToString() != "200")
+            if (result == null || result.StatusCode != HttpStatusCode.OK)
                 throw new ApplicationException();
         }
     }
