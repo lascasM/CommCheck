@@ -29,18 +29,18 @@ namespace CommCheck
                 var result = examin.ExaminResultTimes;
                 outputFile.WriteLine(
                     $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum}," + 
-                    $"{result.Average()},{result.Max()},{Mean(result)},{CalcStd(result)},{result.Average() + CalcStd(result) * 3}"
+                    $"{result.Average():n2},{result.Max():n2},{Mean(result):n2},{CalcStd(result):n2},{(result.Average() + CalcStd(result) * 3):n2}"
                 );
             }
         }
 
-        private double Mean(ConcurrentBag<double> xs)
+        private static double Mean(ConcurrentBag<double> xs)
         {
             var ys = xs.OrderBy(x => x).ToList();
             return (xs.ElementAt(ys.Count/2) + ys.ElementAt((ys.Count-1)/2)) / 2;
         }
 
-        private double CalcStd(IReadOnlyCollection<double> pValues)
+        private static double CalcStd(IReadOnlyCollection<double> pValues)
         {
             //平均を取得
             var lAverage = pValues.Average();
