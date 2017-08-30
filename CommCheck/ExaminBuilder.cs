@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CommCheck
@@ -17,6 +15,7 @@ namespace CommCheck
         private int[] _dataSizeArray;
         private int[] _commIntercalMillSec;
         private int _examinNum;
+        private int _threadNum;
 
         public static ExaminBuilder Instance()
         {
@@ -53,25 +52,29 @@ namespace CommCheck
             return this;
         }
 
-        public ExaminBase Build()
+        public ExaminBuilder SetThreadNum(int threadNum)
         {
-            List<Examin> examinList;
-
-            if (_testType == TestType.Post)
-            {
-                examinList = GeneratePostExamin();
-            }
-            
-            return new ExaminBase(examinList);
+            _threadNum = threadNum;
+            return this;
         }
 
-        private List<Examin> GeneratePostExamin()
+        public ExaminBase Build()
         {
-            var examinResultTimes = new ConcurrentBag<int>;
-            var retList = new List<Examin> {};
+            if (_testType == TestType.Post)
+                return new ExaminBase(
+                    GeneratePostExaminClient(),
+                    new ExaminServer()
+                );
+
+            return null;
+        }
+
+        private List<ExaminClient> GeneratePostExaminClient()
+        {
+            var retList = new List<ExaminClient> {};
             retList.AddRange(
                 from commInterval in _commIntercalMillSec from dataSize in _dataSizeArray 
-                select new PostExamin(dataSize, commInterval, _examinNum, examinResultTimes)
+                select new PostExaminClient(dataSize, commInterval, _examinNum, _threadNum)
             );
 
             return retList;

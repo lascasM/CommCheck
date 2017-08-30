@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Extensions.Standard" Version="1.2.1" />
     <PackageReference Include="GeoJSON.Net" Version="1.1.64" />
+    <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
   </ItemGroup>
 </Project>

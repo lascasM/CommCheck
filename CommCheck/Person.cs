@@ -34,6 +34,11 @@ namespace CommCheck
             return ret;
         }
 
+        public static Person CreatePerson(string name, byte[] data)
+        {
+            return new Person(name, data);
+        }
+
         public override string ToString()
         {
             return 
