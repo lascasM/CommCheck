@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,23 +15,24 @@ namespace CommCheck
         public override void Execute()
         {
             TotalTimer.Start();
-            
+
             var tasks = new List<Task>();
 
             for (var i = 0; i < ThreadNum; i++)
             {
                 var t = new Task(ExecuteExmain);
                 t.Start();
+                tasks.Add(t);
             }
 
             Task.WaitAll(tasks.ToArray());
-            
+
             TotalTimer.Stop();
         }
 
         private void ExecuteExmain()
         {
-            for (var i = 0; i < ExaminNum; i++)
+            for (var i = 1; i <= ExaminNum; i++) // 表示のために、1からスタート
             {
                 var sw = new System.Diagnostics.Stopwatch();
                 sw.Start();
@@ -48,7 +48,7 @@ namespace CommCheck
                         bson
                     );
 
-                    if (i % 1000 == 0)
+                    if (i % 500 == 0)
                         Console.Write($"{i}, ");
                 }
                 catch
@@ -63,30 +63,16 @@ namespace CommCheck
             }
         }
 
-        private async void PostTo(Uri uri, byte[] bson)
+        private void PostTo(Uri uri, byte[] bson)
         {
-                var result = await PostImlp(uri, bson);
+            var webTask = WebPageAsync.Post(uri, bson);
 
-                if (result == null)
-                    throw new FieldAccessException();
-        }
+            webTask.Wait();
+            var result = webTask.Result; // 結果を取得
 
-        private static async Task<string> PostImlp(Uri uri, byte[] bson)
-        {
-            try
-            {
-                var client = new HttpClient();
-                var response = await client.PostAsync(
-                    uri,
-                    new ByteArrayContent(bson)
-                );
-    
-                return await response.Content.ReadAsStringAsync();
-            }
-            catch
-            {
-                return null;
-            }
+            // 取得結果を使った処理
+            if (result == null || result.StatusCode.ToString() != "200")
+                throw new ApplicationException();
         }
     }
 }

@@ -19,8 +19,12 @@ namespace CommCheck
 
         public void Execute()
         {
-            var thread = new Thread(_examinServer.StartListen);
-            thread.Start();
+            var tokenSource2 = new CancellationTokenSource();
+            CancellationToken ct = tokenSource2.Token;
+            Task.Factory.StartNew(()=>
+            {
+                _examinServer.StartListen(ct);
+            }, ct);
                 
             foreach (var examin in _examinList)
             {
@@ -34,6 +38,8 @@ namespace CommCheck
                 Console.WriteLine("平均 + 3シグマ[ms]：{0:n2}", examin.ExaminResultTimes.Average() + PopulationStandardDeviation(examin.ExaminResultTimes) * 3);
                 Console.WriteLine("====  通信失敗回数 : {0}  ====", examin.ErrorCountor);
             }
+
+            tokenSource2.Cancel();
         }
 
         private double PopulationStandardDeviation(IReadOnlyCollection<double> pValues)

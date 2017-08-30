@@ -16,7 +16,7 @@ namespace CommCheck
                     .SetDataSizeArray(new int[] {5 * 1000/*, 50 * 1000, 1000 * 1000, 500 * 1000 * 1000, 2000 * 1000 * 1000*/})
                     .SetCommIntervalMillSec(new int[]{/*10, 15, 20, */30})
                     .SetExaminNum(30000)
-                    .SetThreadNum(1)
+                    .SetThreadNum(new int[]{3})
                     .Build();
                 
                 examainBase.Execute();

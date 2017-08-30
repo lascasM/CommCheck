@@ -15,7 +15,7 @@ namespace CommCheck
         private int[] _dataSizeArray;
         private int[] _commIntercalMillSec;
         private int _examinNum;
-        private int _threadNum;
+        private int[] _threadNum;
 
         public static ExaminBuilder Instance()
         {
@@ -52,7 +52,7 @@ namespace CommCheck
             return this;
         }
 
-        public ExaminBuilder SetThreadNum(int threadNum)
+        public ExaminBuilder SetThreadNum(int[] threadNum)
         {
             _threadNum = threadNum;
             return this;
@@ -73,8 +73,10 @@ namespace CommCheck
         {
             var retList = new List<ExaminClient> {};
             retList.AddRange(
-                from commInterval in _commIntercalMillSec from dataSize in _dataSizeArray 
-                select new PostExaminClient(dataSize, commInterval, _examinNum, _threadNum)
+                from commInterval in _commIntercalMillSec 
+                from dataSize in _dataSizeArray 
+                from threadNum in _threadNum
+                    select new PostExaminClient(dataSize, commInterval, _examinNum, threadNum)
             );
 
             return retList;

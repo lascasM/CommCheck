@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -15,14 +16,14 @@ namespace CommCheck
             _listener.Prefixes.Add("http://localhost:12345/");
         }
 
-        public void StartListen()
+        public void StartListen(CancellationToken ct)
         {
             try
             {
                 _listener.Start();
                 
                 var testNumber = 1;
-                while (true)
+                while (ct.IsCancellationRequested)
                 {
                     var context = _listener.GetContext();
 
@@ -41,6 +42,10 @@ namespace CommCheck
 
             void ReactPostRequest(HttpListenerContext context)
             {
+                var ms = new MemoryStream();
+                context.Request.InputStream.CopyTo(ms);
+                BsonSerialiser.DeserializeBsonFrom<Person>(ms.ToArray());
+                
                 var res = context.Response;
                 res.StatusCode = 200;
                 res.Close();
