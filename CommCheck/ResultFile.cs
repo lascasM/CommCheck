@@ -17,18 +17,17 @@ namespace CommCheck
 
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
             {
-                outputFile.WriteLine("DataSize,Interval,Threads,average,max,median,std,3sigma");
+                outputFile.WriteLine("DataSize,Interval,Threads,ErroCountor,average,max,median,std,3sigma");
             }
         }
 
         public void Write(ExaminClient examin)
         {
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
-            {
-                
+            {   
                 var result = examin.ExaminResultTimes;
                 outputFile.WriteLine(
-                    $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum}," + 
+                    $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
                     $"{result.Average():n2},{result.Max():n2},{Mean(result):n2},{CalcStd(result):n2},{(result.Average() + CalcStd(result) * 3):n2}"
                 );
             }
