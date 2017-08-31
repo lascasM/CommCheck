@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 namespace CommCheck
@@ -12,6 +13,7 @@ namespace CommCheck
         public int DataSize { get; }
         public int ThreadNum { get; }
         public int CommInterval { get; }
+        protected readonly bool _useBson;
         protected readonly int ExaminNum;
         public Stopwatch TotalTimer { get; } 
         
@@ -22,14 +24,15 @@ namespace CommCheck
 
         protected void IncrementErrorCounter() { Interlocked.Increment(ref _errorCouter); }
 
-        protected ExaminClient(int dataSize, int commInterval, int examinNum, int threadNum)
+        protected ExaminClient(bool useBson, int dataSize, int commInterval, int examinNum, int threadNum)
         {
             DataSize = dataSize;
             CommInterval = commInterval;
+            _useBson = useBson;
             ExaminNum = examinNum;
             ThreadNum = threadNum;
             TotalTimer = new Stopwatch();
-            ExaminResultTimes = new ConcurrentBag<double>();;
+            ExaminResultTimes = new ConcurrentBag<double>();
         }
 
         public abstract void Execute();    
@@ -38,9 +41,8 @@ namespace CommCheck
         {
             var rnd = new Random();
             var byteLength = rnd.Next((int) (DataSize * 0.95), (int) (DataSize * 1.05));
-            
-            var ret = new byte[byteLength];
-            rnd.NextBytes(ret);
+
+            var ret = Enumerable.Repeat<byte>(30, byteLength).ToArray();
                 
             return ret;
         }

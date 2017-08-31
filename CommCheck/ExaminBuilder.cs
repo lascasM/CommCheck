@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 
 namespace CommCheck
 {
@@ -11,6 +12,7 @@ namespace CommCheck
             Get
         }
 
+        private bool _useBson;
         private TestType _testType;
         private int[] _dataSizeArray;
         private int[] _commIntercalMillSec;
@@ -25,12 +27,18 @@ namespace CommCheck
         private ExaminBuilder()
         {
             _testType = TestType.Post;
+            _useBson = false;
         }
-
 
         public ExaminBuilder SetPostTest()
         {
             _testType = TestType.Post;
+            return this;
+        }
+        
+        public ExaminBuilder SetBsonUsage()
+        {
+            _useBson = true;
             return this;
         }
 
@@ -63,7 +71,7 @@ namespace CommCheck
             if (_testType == TestType.Post)
                 return new ExaminBase(
                     GeneratePostExaminClient(),
-                    new ExaminServer()
+                    new ExaminServer(_useBson)
                 );
 
             return null;
@@ -76,7 +84,7 @@ namespace CommCheck
                 from commInterval in _commIntercalMillSec 
                 from dataSize in _dataSizeArray 
                 from threadNum in _threadNum
-                    select new PostExaminClient(dataSize, commInterval, _examinNum, threadNum)
+                    select new PostExaminClient(_useBson, dataSize, commInterval, _examinNum, threadNum)
             );
 
             return retList;

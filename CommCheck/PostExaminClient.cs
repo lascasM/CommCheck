@@ -8,8 +8,8 @@ namespace CommCheck
 {
     internal class PostExaminClient : ExaminClient
     {
-        public PostExaminClient(int dataSize, int commInterval, int examinNum, int threadNum) :
-            base(dataSize, commInterval, examinNum, threadNum)
+        public PostExaminClient(bool useBson, int dataSize, int commInterval, int examinNum, int threadNum) :
+            base(useBson, dataSize, commInterval, examinNum, threadNum)
         {}
 
         public override void Execute()
@@ -43,17 +43,12 @@ namespace CommCheck
 
                 try
                 {
-                    var person = Person.CreatePerson(i.ToString(), MakeRandomBinary());
-
-                    var bson = BsonSerialiser.SerializeToBson(person);
+                    var binaryData = CreateSendBinary(i);
 
                     PostTo(
                         new Uri("http://localhost:12345/"),
-                        bson
+                        binaryData
                     );
-
-                    if (i % 500 == 0 && displayed)
-                        Console.Write($"{i}, ");
                 }
                 catch
                 {
@@ -64,7 +59,19 @@ namespace CommCheck
 
                 sw.Stop();
                 ExaminResultTimes.Add(sw.Elapsed.TotalMilliseconds);
+
+                if (i % 500 == 0 && displayed)
+                    Console.Write($"{i}, ");
             }
+        }
+
+        private byte[] CreateSendBinary(int i)
+        {
+            if (!_useBson) 
+                return MakeRandomBinary();
+            
+            var person = Person.CreatePerson(i.ToString(), MakeRandomBinary());
+            return BsonSerialiser.SerializeToBson(person);
         }
 
         private void PostTo(Uri uri, byte[] bson)

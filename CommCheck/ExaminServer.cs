@@ -8,10 +8,12 @@ namespace CommCheck
 {
     public class ExaminServer
     {
+        private readonly bool _useBson;
         private readonly HttpListener _listener;
         
-        public ExaminServer()
+        public ExaminServer(bool useBson)
         {
+            _useBson = useBson;
             _listener = new HttpListener();
             _listener.Prefixes.Add("http://localhost:12345/");
         }
@@ -44,7 +46,9 @@ namespace CommCheck
             {
                 var ms = new MemoryStream();
                 context.Request.InputStream.CopyTo(ms);
-                BsonSerialiser.DeserializeBsonFrom<Person>(ms.ToArray());
+                
+                if (_useBson) // ただのPostならそのままのデータを突っ込めばいいが、BSONなら一度でコードが必要なのでデコードまでをここでしておく
+                    BsonSerialiser.DeserializeBsonFrom<Person>(ms.ToArray());
                 
                 var res = context.Response;
                 res.StatusCode = 200;
