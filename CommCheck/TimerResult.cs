@@ -13,7 +13,7 @@ namespace CommCheck
             var dt = DateTime.Now;
             _fileName = "timerResult_" + dt.Year + dt.Month + dt.Day + dt.Hour + dt.Minute + ".csv";
 
-            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
+            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {
                 outputFile.WriteLine("DataSize,Interval,Threads,time");
             }
@@ -21,7 +21,7 @@ namespace CommCheck
 
         public void Write(ExaminClient examin)
         {
-            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
+            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {
 
                 foreach (var result in examin.ExaminResultTimes)

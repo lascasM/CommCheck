@@ -15,15 +15,18 @@ namespace CommCheck
             var dt = DateTime.Now;
             _fileName = "result_" + dt.Year + dt.Month + dt.Day + dt.Hour + dt.Minute + ".csv";
 
-            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
+            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {
                 outputFile.WriteLine("DataSize,Interval,Threads,ErroCountor,average,max,median,std,ave+3sigma,ave-3sigma");
             }
         }
+        
+        public ~ResultFile()
+        {}
 
         public void Write(ExaminClient examin)
         {
-            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
+            using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {   
                 var result = examin.ExaminResultTimes;
                 outputFile.WriteLine(

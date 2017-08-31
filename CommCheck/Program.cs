@@ -27,7 +27,7 @@ namespace CommCheck
 #else
                 var examainBase = ExaminBuilder.Instance()
                     .SetPostTest()
-                    .SetDataSizeArray(new[] {1000 * 1000})
+                    .SetDataSizeArray(new[] {10 * 1000, 100 * 1000, 1000 * 1000})
                     .SetCommIntervalMillSec(new[]{0, 10, 20})
                     .SetExaminNum(5000)
                     .SetThreadNum(new[]{1,5,8});
