@@ -34,7 +34,7 @@ namespace CommCheck
             {
                 var examin = _examinList[i];
                 
-                Console.Write($"測定中[DataSize:{examin.DataSize:n}, Interval:{examin.CommInterval}, ThreadNum:{examin.ThreadNum}] >>> ");
+                Console.Write($"測定中[DataSize:{examin.DataSize:n0}, Interval:{examin.CommInterval}, ThreadNum:{examin.ThreadNum}] >>> ");
 
                 examin.Execute();
 
