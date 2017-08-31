@@ -17,7 +17,7 @@ namespace CommCheck
 
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + $"\\{_fileName}", true))
             {
-                outputFile.WriteLine("DataSize,Interval,Threads,ErroCountor,average,max,median,std,3sigma");
+                outputFile.WriteLine("DataSize,Interval,Threads,ErroCountor,average,max,median,std,ave+3sigma,ave-3sigma");
             }
         }
 
@@ -30,7 +30,7 @@ namespace CommCheck
                     $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
                     $"{result.Average():f2},{result.Max():f2}," +
                     $"{Mean(result):f2},{CalcStd(result):f2}," +
-                    $"{(result.Average() + CalcStd(result) * 3):f2}"
+                    $"{ThreeSigma(result):f2}, {ThreeSigma(result, true):f2}"
                 );
             }
         }
@@ -51,6 +51,13 @@ namespace CommCheck
 
             //σを算出して返却
             return Math.Sqrt(lStandardDeviation / pValues.Count);
+        }
+
+        private static double ThreeSigma(IReadOnlyCollection<double> result, bool isMinath = false)
+        {
+            if (isMinath)
+                return Math.Max(result.Average() - CalcStd(result) * 3, 0);
+            return result.Average() + CalcStd(result) * 3;
         }
     }
 }
