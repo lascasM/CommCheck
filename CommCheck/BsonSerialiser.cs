@@ -9,7 +9,7 @@ namespace CommCheck
         public static byte[] SerializeToBson<TType>(TType person)
         {
             var ms = new MemoryStream();
-            using (var writer = new BsonWriter(ms))
+            using (var writer = new BsonDataWriter(ms))
             {
                 var serializer = new JsonSerializer();
                 serializer.Serialize(writer, person);
@@ -21,7 +21,7 @@ namespace CommCheck
         public static TType DeserializeBsonFrom<TType>(byte[] bson)
         {         
             var ms = new MemoryStream(bson);
-            using (var reader = new BsonReader(ms))
+            using (var reader = new BsonDataReader(ms))
             {
                 var serializer = new JsonSerializer();
             
