@@ -29,7 +29,7 @@ namespace CommCheck
                     //    ex = ex.InnerException;
                     //}
                 }
-                catch (TaskCanceledException e)
+                catch (TaskCanceledException)
                 {
                     // タスクがキャンセルされたとき（一般的にタイムアウト）
                     //Console.WriteLine("\nタイムアウト!");
