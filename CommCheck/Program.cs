@@ -1,11 +1,11 @@
 ﻿//#define USE_BSON
-#define PERFOMANCE
+//#define PERFOMANCE
 
 using System;
 
 namespace CommCheck
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {
@@ -18,14 +18,13 @@ namespace CommCheck
                     .SetPostTest()
                     .SetDataSizeArray(new[]
                     {
-                        5 * 1000, 1000 * 1000, 10 * 1000 * 1000, 20 * 1000 * 1000, 50 * 1000 * 1000, 100 * 1000 * 1000,
                         500 * 1000 * 1000
                     })
                     .SetCommIntervalMillSec(new[] {0})
-                    .SetExaminNum(3000)
+                    .SetExaminNum(1000)
                     .SetThreadNum(new[] {1});
 #else
-                var examainBase = ExaminBuilder.Instance()
+                var examinBuilder = ExaminBuilder.Instance()
                     .SetPostTest()
                     .SetDataSizeArray(new[] {10 * 1000, 100 * 1000, 1000 * 1000})
                     .SetCommIntervalMillSec(new[]{0, 10, 20})

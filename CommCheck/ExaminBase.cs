@@ -41,6 +41,8 @@ namespace CommCheck
                 resultFile.Write(examin);
                 timerResultFile.Write(examin);
                 
+                Thread.Sleep(2000);
+                
                 Console.WriteLine($" <<<  測定完了[{i}](測定時間:{examin.TotalTimer.Elapsed.TotalSeconds:n1}[sec])");
             }
             

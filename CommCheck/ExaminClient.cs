@@ -13,7 +13,7 @@ namespace CommCheck
         public int DataSize { get; }
         public int ThreadNum { get; }
         public int CommInterval { get; }
-        protected readonly bool _useBson;
+        protected readonly bool UseBson;
         protected readonly int ExaminNum;
         public Stopwatch TotalTimer { get; } 
         
@@ -28,7 +28,7 @@ namespace CommCheck
         {
             DataSize = dataSize;
             CommInterval = commInterval;
-            _useBson = useBson;
+            UseBson = useBson;
             ExaminNum = examinNum;
             ThreadNum = threadNum;
             TotalTimer = new Stopwatch();

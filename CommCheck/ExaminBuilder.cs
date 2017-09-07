@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 
 namespace CommCheck
 {
@@ -8,8 +7,7 @@ namespace CommCheck
     {
         private enum TestType
         {
-            Post,
-            Get
+            Post
         }
 
         private bool _useBson;
@@ -36,6 +34,7 @@ namespace CommCheck
             return this;
         }
         
+        // ReSharper disable once UnusedMember.Global
         public ExaminBuilder SetBsonUsage()
         {
             _useBson = true;
@@ -79,7 +78,7 @@ namespace CommCheck
 
         private List<ExaminClient> GeneratePostExaminClient()
         {
-            var retList = new List<ExaminClient> {};
+            var retList = new List<ExaminClient>();
             retList.AddRange(
                 from commInterval in _commIntercalMillSec 
                 from dataSize in _dataSizeArray 

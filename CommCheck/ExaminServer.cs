@@ -15,7 +15,7 @@ namespace CommCheck
         {
             _useBson = useBson;
             _listener = new HttpListener();
-            _listener.Prefixes.Add("http://localhost:12345/");
+            _listener.Prefixes.Add("http://127.0.0.1:12345/");
         }
 
         public void StartListen(CancellationToken ct)

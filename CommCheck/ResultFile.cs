@@ -17,12 +17,9 @@ namespace CommCheck
 
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {
-                outputFile.WriteLine("DataSize,Interval,Threads,ErroCountor,average,max,median,std,ave+3sigma,ave-3sigma");
+                outputFile.WriteLine("DataSize[KB],Interval[ms],Threads,ErroCountor,average[ms],max[ms],median[ms],std[ms],ave+3sigma[ms],ave-3sigma[ms]");
             }
         }
-        
-        public ~ResultFile()
-        {}
 
         public void Write(ExaminClient examin)
         {
@@ -30,7 +27,7 @@ namespace CommCheck
             {   
                 var result = examin.ExaminResultTimes;
                 outputFile.WriteLine(
-                    $"{examin.DataSize},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
+                    $"{examin.DataSize/1000},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
                     $"{result.Average():f2},{result.Max():f2}," +
                     $"{Mean(result):f2},{CalcStd(result):f2}," +
                     $"{ThreeSigma(result):f2}, {ThreeSigma(result, true):f2}"

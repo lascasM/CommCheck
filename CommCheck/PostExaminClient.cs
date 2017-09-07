@@ -39,38 +39,45 @@ namespace CommCheck
             for (var i = 1; i <= ExaminNum; i++) // 表示のために、1からスタート
             {
                 var sw = new System.Diagnostics.Stopwatch();
+
+                var bynaryData = MakeRandomBinary();
+                
                 sw.Start();
 
                 try
                 {
-                    var binaryData = CreateSendBinary(i);
+                    var sendData = CreateSendBinary(i, bynaryData);
 
                     PostTo(
-                        new Uri("http://localhost:12345/"),
-                        binaryData
+                        new Uri("http://127.0.0.1:12345/"),
+                        sendData
                     );
+                    
+                    Thread.Sleep(CommInterval);
+                    
+                    sw.Stop();
+                    ExaminResultTimes.Add(sw.Elapsed.TotalMilliseconds);
                 }
                 catch
                 {
                     IncrementErrorCounter();
+                    
+                    Thread.Sleep(CommInterval);
+                    
+                    sw.Stop();
                 }
-
-                Thread.Sleep(CommInterval);
-
-                sw.Stop();
-                ExaminResultTimes.Add(sw.Elapsed.TotalMilliseconds);
-
+                
                 if (i % 500 == 0 && displayed)
                     Console.Write($"{i}, ");
             }
         }
 
-        private byte[] CreateSendBinary(int i)
+        private byte[] CreateSendBinary(int i, byte[] bynaryData)
         {
-            if (!_useBson) 
-                return MakeRandomBinary();
+            if (!UseBson) 
+                return bynaryData;
             
-            var person = Person.CreatePerson(i.ToString(), MakeRandomBinary());
+            var person = Person.CreatePerson(i.ToString(), bynaryData);
             return BsonSerialiser.SerializeToBson(person);
         }
 
