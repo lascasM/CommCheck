@@ -17,7 +17,7 @@ namespace CommCheck
 
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {
-                outputFile.WriteLine("DataSize[KB],Interval[ms],Threads,ErroCountor,average[ms],max[ms],median[ms],std[ms],ave+3sigma[ms],ave-3sigma[ms]");
+                outputFile.WriteLine("DataSize[KB],Interval[ms],Threads,ErroCountor,ErrorRate[%],average[ms],throughput[MB/sec],max[ms],median[ms],std[ms],ave+3sigma[ms],ave-3sigma[ms]");
             }
         }
 
@@ -26,9 +26,10 @@ namespace CommCheck
             using (var outputFile = new StreamWriter(Environment.CurrentDirectory + Path.DirectorySeparatorChar + $"{_fileName}", true))
             {   
                 var result = examin.ExaminResultTimes;
+                var dataSizeKiloByte = examin.DataSize/1000;
                 outputFile.WriteLine(
-                    $"{examin.DataSize/1000},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor}," + 
-                    $"{result.Average():f2},{result.Max():f2}," +
+                    $"{dataSizeKiloByte},{examin.CommInterval},{examin.ThreadNum},{examin.ErrorCountor},{examin.ErrorRate:f1}," + 
+                    $"{result.Average():f2},{dataSizeKiloByte*examin.ThreadNum/result.Average():f2},{result.Max():f2}," +
                     $"{Mean(result):f2},{CalcStd(result):f2}," +
                     $"{ThreeSigma(result):f2}, {ThreeSigma(result, true):f2}"
                 );
