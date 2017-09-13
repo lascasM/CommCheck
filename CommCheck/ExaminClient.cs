@@ -22,7 +22,7 @@ namespace CommCheck
 
         public int ErrorCountor => _errorCouter;
         
-        public double ErrorRate => (double)_errorCouter / (DataSize * ThreadNum) * 100;
+        public double ErrorRate => (double)_errorCouter / (ExaminNum * ThreadNum) * 100;
 
         protected void IncrementErrorCounter() { Interlocked.Increment(ref _errorCouter); }
 
